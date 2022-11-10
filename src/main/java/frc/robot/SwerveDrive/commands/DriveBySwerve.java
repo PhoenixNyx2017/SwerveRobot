@@ -4,6 +4,7 @@
 
 package frc.robot.SwerveDrive.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.SwerveDrive.SwerveDrive;
 
@@ -11,9 +12,12 @@ public class DriveBySwerve extends CommandBase {
   /** Creates a new DriveBySwerve. */
 
   SwerveDrive sDrive;
+  Joystick driver;
 
-  public DriveBySwerve() {
+  public DriveBySwerve(SwerveDrive sDrive, Joystick driver) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.sDrive = sDrive;
+    this.driver = driver;
 
     addRequirements(sDrive);
   }

@@ -24,6 +24,7 @@ public final class Constants {
     public final static double TRACK_WIDTH = 0.0; // number in meters
     public final static double WHEEL_BASE = 0.0; // number in meters
 
+    // TODO: get true ID numbers
     public final static int LEFT_FRONT_DRIVE_ID = 1;
     public final static int LEFT_BACK_DRIVE_ID = 2;
     public final static int RIGHT_FRONT_DRIVE_ID = 3;
@@ -41,5 +42,13 @@ public final class Constants {
 
     public final static int ENCODER_TICKS_PER_ROTATION = 0; // NEED NUMBER
     public final static double WHEEL_DIAMETER = 0.0;// some UNIT
+
+    public final static boolean FIELD_BASED = false;
+
+    // TODO: get true constants
+    public final static int JOYSTICK_LEFT_X_AXIS = 0;
+    public final static int JOYSTICK_LEFT_Y_AXIS = 1;
+    public final static int JOYSTICK_RIGHT_X_AXIS = 2;
+    public final static int JOYSTICK_RIGHT_Y_AXIS = 3;
 
 }

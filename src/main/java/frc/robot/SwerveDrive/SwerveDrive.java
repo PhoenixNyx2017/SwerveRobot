@@ -7,7 +7,7 @@ package frc.robot.SwerveDrive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -45,5 +45,18 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void drive(SwerveClass sDrive, Joystick driver) {
+
+    // numbers are values from [-1.0, 1.0]
+    double forward = driver.getRawAxis(Constants.JOYSTICK_LEFT_Y_AXIS);
+    double strafe = driver.getRawAxis(Constants.JOYSTICK_LEFT_X_AXIS);
+    double rotation = driver.getRawAxis(Constants.JOYSTICK_RIGHT_X_AXIS);
+
+    // may need to adjust
+
+    sDrive.driveSwerve(forward, strafe, rotation);
+
   }
 }
