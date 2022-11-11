@@ -6,6 +6,7 @@ package frc.robot.SwerveDrive.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.SwerveDrive.SwerveDrive;
 
 public class DriveBySwerve extends CommandBase {
@@ -30,7 +31,9 @@ public class DriveBySwerve extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sDrive.drive(sDrive.sClass, driver);
+    sDrive.drive(driver.getRawAxis(Constants.JOYSTICK_LEFT_Y_AXIS),
+        driver.getRawAxis(Constants.JOYSTICK_LEFT_X_AXIS),
+        driver.getRawAxis(Constants.JOYSTICK_RIGHT_X_AXIS));
   }
 
   // Called once the command ends or is interrupted.

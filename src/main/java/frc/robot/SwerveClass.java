@@ -23,7 +23,7 @@ public class SwerveClass {
     public TalonFX rightBackDriver, rightBackTurner;
 
     // TODO: Add IMU here
-    private AHRS imu;
+    // private AHRS imu;
 
     public SwerveClass(TalonFX leftFrontDriver, TalonFX leftFrontTurner,
             TalonFX leftBackDriver, TalonFX leftBackTurner,
@@ -45,8 +45,8 @@ public class SwerveClass {
 
     public void driveSwerve(double forward, double strafe, double rotation) {
 
-        // forward - unit/sec
-        // strafe - unit/sec
+        // forward - meters/sec
+        // strafe - meters/sec
         // rotation - rad/sec
 
         // if (Constants.FIELD_BASED) {
@@ -69,32 +69,16 @@ public class SwerveClass {
         // TODO: translate values into (output value is in encoder ticks or an analog
         // value, dependant on sensor)
 
-        // setting
-        leftFrontDriver.set(ControlMode.Velocity,
-                (int) ((leftFrontVals[0]
-                        * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
-                        / Constants.HUNDRED_MS_IN_SEC));
-        leftBackDriver.set(ControlMode.Velocity,
-                (int) ((leftBackVals[0]
-                        * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
-                        / Constants.HUNDRED_MS_IN_SEC));
-        rightFrontDriver.set(ControlMode.Velocity,
-                (int) ((rightFrontVals[0]
-                        * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
-                        / Constants.HUNDRED_MS_IN_SEC));
-        rightBackDriver.set(ControlMode.Velocity,
-                (int) ((rightBackVals[0]
-                        * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
-                        / Constants.HUNDRED_MS_IN_SEC));
+        // setting Motor values
+        leftFrontDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(leftFrontVals[0]));
+        leftBackDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(leftBackVals[0]));
+        rightFrontDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(rightFrontVals[0]));
+        rightBackDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(rightBackVals[0]));
 
-        leftFrontTurner.set(ControlMode.Position,
-                (int) (leftFrontVals[1] / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
-        leftBackTurner.set(ControlMode.Position,
-                (int) (leftBackVals[1] / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
-        rightFrontTurner.set(ControlMode.Position,
-                (int) (rightFrontVals[1] / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
-        rightBackTurner.set(ControlMode.Position,
-                (int) (rightBackVals[1] / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
+        leftFrontTurner.set(ControlMode.Position, angle2Encoder(leftFrontVals[1]));
+        leftBackTurner.set(ControlMode.Position, angle2Encoder(leftBackVals[1]));
+        rightFrontTurner.set(ControlMode.Position, angle2Encoder(rightFrontVals[1]));
+        rightBackTurner.set(ControlMode.Position, angle2Encoder(rightBackVals[1]));
 
     }
 
@@ -239,6 +223,21 @@ public class SwerveClass {
         rightBackMotorVal[1] = Math.atan2(yComp, xComp); // angle of the vector
 
         return rightBackMotorVal;
+    }
+
+    private int wheelSpeed2EncoderTics(double speed) {
+        int encoders = (int) ((speed
+                * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
+                / Constants.HUNDRED_MS_IN_SEC);
+
+        return encoders;
+    }
+
+    private int angle2Encoder(double angle) {
+        int encoders = (int) ((angle / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
+
+        return encoders;
+
     }
 
 }

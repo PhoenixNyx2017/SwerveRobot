@@ -55,16 +55,13 @@ public class SwerveDrive extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void drive(SwerveClass sDrive, Joystick driver) {
+  public void drive(double forward, double strafe, double rotation) {
 
     // numbers are values from [-1.0, 1.0]
-    double forward = driver.getRawAxis(Constants.JOYSTICK_LEFT_Y_AXIS);
-    double strafe = driver.getRawAxis(Constants.JOYSTICK_LEFT_X_AXIS);
-    double rotation = driver.getRawAxis(Constants.JOYSTICK_RIGHT_X_AXIS);
 
     // may need to adjust
 
-    sDrive.driveSwerve(forward, strafe, rotation);
+    sClass.driveSwerve(forward, strafe, rotation);
 
   }
 
