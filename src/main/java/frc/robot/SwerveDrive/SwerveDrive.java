@@ -6,8 +6,10 @@ package frc.robot.SwerveDrive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,7 +23,9 @@ public class SwerveDrive extends SubsystemBase {
   TalonFX rightFrontDrive, rightFrontSteer;
   TalonFX rightBackDrive, rightBackSteer;
 
-  SwerveClass sDrive;
+  public SwerveClass sClass;
+
+  AHRS imu;
 
   public SwerveDrive() {
 
@@ -35,10 +39,14 @@ public class SwerveDrive extends SubsystemBase {
     rightFrontSteer = new TalonFX(Constants.RIGHT_FRONT_TURN_ID);
     rightBackSteer = new TalonFX(Constants.RIGHT_BACK_TURN_ID);
 
-    sDrive = new SwerveClass(leftFrontDrive, leftFrontSteer,
+    sClass = new SwerveClass(leftFrontDrive, leftFrontSteer,
         leftBackDrive, leftBackSteer,
         rightFrontDrive, rightFrontSteer,
         rightBackDrive, rightBackSteer);
+
+    imu = new AHRS(SPI.Port.kMXP); // On board Gyro
+
+    resetEncoders();
 
   }
 
@@ -58,5 +66,9 @@ public class SwerveDrive extends SubsystemBase {
 
     sDrive.driveSwerve(forward, strafe, rotation);
 
+  }
+
+  public void resetEncoders() {
+    sClass.resetEncoders();
   }
 }

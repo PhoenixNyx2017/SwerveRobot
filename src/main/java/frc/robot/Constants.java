@@ -40,10 +40,13 @@ public final class Constants {
     public final static int RIGHT_FRONT_ENCODER_ID = 23;
     public final static int RIGHT_BACK_ENCODER_ID = 24;
 
-    public final static int ENCODER_TICKS_PER_ROTATION = 0; // NEED NUMBER
-    public final static double WHEEL_DIAMETER = 0.0;// some UNIT
+    // TODO
+    public final static int ENCODER_TICKS_PER_ROTATION = 2048; // NEED NUMBER
+    public final static double WHEEL_DIAMETER = 4.0;// inches
 
     public final static boolean FIELD_BASED = false;
+
+    public final static int HUNDRED_MS_IN_SEC = 10;
 
     // TODO: get true constants
     public final static int JOYSTICK_LEFT_X_AXIS = 0;

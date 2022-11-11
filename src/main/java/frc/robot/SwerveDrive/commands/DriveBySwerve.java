@@ -30,6 +30,7 @@ public class DriveBySwerve extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    sDrive.drive(sDrive.sClass, driver);
   }
 
   // Called once the command ends or is interrupted.

@@ -28,6 +28,8 @@ public class RobotContainer {
 
   Joystick driver, operator;
 
+  long startTime;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */

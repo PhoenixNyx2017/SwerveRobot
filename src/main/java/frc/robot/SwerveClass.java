@@ -6,8 +6,12 @@ package frc.robot;
 
 import java.lang.Math;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SPI;
 
 /** Add your docs here. */
 // This is a custom class for Swerve Drive
@@ -19,6 +23,7 @@ public class SwerveClass {
     public TalonFX rightBackDriver, rightBackTurner;
 
     // TODO: Add IMU here
+    private AHRS imu;
 
     public SwerveClass(TalonFX leftFrontDriver, TalonFX leftFrontTurner,
             TalonFX leftBackDriver, TalonFX leftBackTurner,
@@ -34,6 +39,8 @@ public class SwerveClass {
         this.rightFrontTurner = rightFrontTurner;
         this.rightBackDriver = rightFrontDriver;
         this.rightBackTurner = rightBackTurner;
+
+        // imu = new AHRS(SPI.Port.kMXP);
     }
 
     public void driveSwerve(double forward, double strafe, double rotation) {
@@ -42,10 +49,12 @@ public class SwerveClass {
         // strafe - unit/sec
         // rotation - rad/sec
 
-        if (Constants.FIELD_BASED) {
-            // TODO: if the values are field based, adjust forward and strafe values to be
-            // robot based.
-        }
+        // if (Constants.FIELD_BASED) {
+        // // TODO: if the values are field based, adjust forward and strafe values to
+        // be
+        // // robot based.
+
+        // }
 
         // Robot based
         double[] leftFrontVals = findLeftFront(forward, strafe, rotation);
@@ -61,16 +70,65 @@ public class SwerveClass {
         // value, dependant on sensor)
 
         // setting
-        leftFrontDriver.set(ControlMode.Velocity, demand);
-        leftBackDriver.set(ControlMode.Velocity, demand);
-        rightFrontDriver.set(ControlMode.Velocity, demand);
-        rightBackDriver.set(ControlMode.Velocity, demand);
+        leftFrontDriver.set(ControlMode.Velocity,
+                (int) ((leftFrontVals[0]
+                        * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
+                        / Constants.HUNDRED_MS_IN_SEC));
+        leftBackDriver.set(ControlMode.Velocity,
+                (int) ((leftBackVals[0]
+                        * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
+                        / Constants.HUNDRED_MS_IN_SEC));
+        rightFrontDriver.set(ControlMode.Velocity,
+                (int) ((rightFrontVals[0]
+                        * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
+                        / Constants.HUNDRED_MS_IN_SEC));
+        rightBackDriver.set(ControlMode.Velocity,
+                (int) ((rightBackVals[0]
+                        * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
+                        / Constants.HUNDRED_MS_IN_SEC));
 
-        leftFrontTurner.set(ControlMode.Position, demand);
-        leftBackTurner.set(ControlMode.Position, demand);
-        rightFrontTurner.set(ControlMode.Position, demand);
-        rightBackTurner.set(ControlMode.Position, demand);
+        leftFrontTurner.set(ControlMode.Position,
+                (int) (leftFrontVals[1] / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
+        leftBackTurner.set(ControlMode.Position,
+                (int) (leftBackVals[1] / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
+        rightFrontTurner.set(ControlMode.Position,
+                (int) (rightFrontVals[1] / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
+        rightBackTurner.set(ControlMode.Position,
+                (int) (rightBackVals[1] / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
 
+    }
+
+    public void driveSwerveVerTwo(double forward, double strafe, double rotation) {
+        double radius = Math.sqrt(Math.pow(Constants.WHEEL_BASE, 2) + Math.pow(Constants.TRACK_WIDTH, 2));
+
+        double a = strafe - rotation * (Constants.WHEEL_BASE / radius);
+        double b = strafe + rotation * (Constants.WHEEL_BASE / radius);
+        double c = forward - rotation * (Constants.TRACK_WIDTH / radius);
+        double d = forward + rotation * (Constants.TRACK_WIDTH / radius);
+
+        double ws1 = Math.sqrt(Math.pow(b, 2) + Math.pow(c, 2));
+        double ws2 = Math.sqrt(Math.pow(b, 2) + Math.pow(d, 2));
+        double ws3 = Math.sqrt(Math.pow(a, 2) + Math.pow(d, 2));
+        double ws4 = Math.sqrt(Math.pow(a, 2) + Math.pow(c, 2));
+
+        double wa1 = Math.atan2(b, c) * (180.0 / Math.PI);
+        double wa2 = Math.atan2(b, d) * (180.0 / Math.PI);
+        double wa3 = Math.atan2(a, d) * (180.0 / Math.PI);
+        double wa4 = Math.atan2(a, c) * (180.0 / Math.PI);
+    }
+
+    public void resetEncoders() {
+
+        // sets all the encoder values to zero
+        this.leftBackDriver.setSelectedSensorPosition(0, 0, 0);
+        this.leftFrontDriver.setSelectedSensorPosition(0, 0, 0);
+        this.rightFrontDriver.setSelectedSensorPosition(0, 0, 0);
+        this.rightBackDriver.setSelectedSensorPosition(0, 0, 0);
+
+        this.leftFrontTurner.setSelectedSensorPosition(0, 0, 0);
+        this.leftBackTurner.setSelectedSensorPosition(0, 0, 0);
+        this.rightFrontTurner.setSelectedSensorPosition(0, 0, 0);
+        this.rightBackTurner.setSelectedSensorPosition(0, 0, 0);
     }
 
     // ---------PRIVATE METHODS FOR THE MATH------------------------------------
