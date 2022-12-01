@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.SwerveDrive.SwerveDrive;
 import frc.robot.SwerveDrive.commands.DriveBySwerve;
 import frc.robot.SwerveMotorTuner.SwerveMotorTuner;
+import frc.robot.SwerveMotorTuner.commands.DecreaseEncoderTic;
+import frc.robot.SwerveMotorTuner.commands.IncreaseEncoderTic;
+import frc.robot.SwerveMotorTuner.commands.SetEncodersToZero;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -68,11 +71,11 @@ public class RobotContainer {
 
     if (Constants.SUBSYSTEM_VERSION == "Test") {
 
-      new JoystickButton(operator, Constants.TRIANGLE).whenPressed(command);
+      new JoystickButton(operator, Constants.TRIANGLE).whenPressed(new IncreaseEncoderTic());
 
-      new JoystickButton(operator, Constants.SQUARE).whenPressed(command);
+      new JoystickButton(operator, Constants.SQUARE).whenPressed(new DecreaseEncoderTic());
 
-      new JoystickButton(operator, buttonNumber).whenPressed(command);
+      new JoystickButton(operator, Constants.X_BUTTON).whenPressed(new SetEncodersToZero());
 
     }
 
