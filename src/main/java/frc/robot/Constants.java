@@ -18,11 +18,8 @@ package frc.robot;
  */
 public final class Constants {
 
-    public static double MAX_LIN_SPEED = 5.0; // meters/sec
+    public static double MAX_LIN_SPEED = 1.0; // meters/sec
     public static double MAX_ROT_SPEED = 1.0; // rad/sec
-
-    public final static double TRACK_WIDTH = 0.0; // number in meters
-    public final static double WHEEL_BASE = 0.0; // number in meters
 
     // TODO: get true ID numbers
     public final static int LEFT_FRONT_DRIVE_ID = 1;
@@ -53,5 +50,25 @@ public final class Constants {
     public final static int JOYSTICK_LEFT_Y_AXIS = 1;
     public final static int JOYSTICK_RIGHT_X_AXIS = 2;
     public final static int JOYSTICK_RIGHT_Y_AXIS = 3;
+
+    // TODO: Math constants
+    public final static double INCHES_2_METERS = 0.0254;
+
+    public static int LEFT_FRONT_ANGLE_ENCODER_OFFSET = 0;
+    public static int LEFT_BACK_ANGLE_ENCODER_OFFSET = 0;
+    public static int RIGHT_FRONT_ANGLE_ENCODER_OFFSET = 0;
+    public static int RIGHT_BACK_ANGLE_ENCODER_OFFSET = 0;
+
+    public final static double TRACK_WIDTH = (22.0 - 2.625 - 2.625) * INCHES_2_METERS; // number in meters
+    public final static double WHEEL_BASE = (22.0 - 2.625 - 2.625) * INCHES_2_METERS; // number in meters
+
+    public final static String SUBSYSTEM_VERSION = "Test";
+
+    public final static int DRIVER_JOYSTICK_ID = 0;
+    public final static int OPERATOR_JOYSTICK_ID = 1;
+
+    public final static int TRIANGLE = 0;
+    public final static int SQUARE = 1;
+    public final static int X_BUTTON = 2;
 
 }

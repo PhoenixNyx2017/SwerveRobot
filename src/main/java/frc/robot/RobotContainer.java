@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.SwerveDrive.SwerveDrive;
 import frc.robot.SwerveDrive.commands.DriveBySwerve;
+import frc.robot.SwerveMotorTuner.SwerveMotorTuner;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -26,6 +28,8 @@ public class RobotContainer {
 
   SwerveDrive sDrive;
 
+  SwerveMotorTuner sMotorTuner;
+
   Joystick driver, operator;
 
   long startTime;
@@ -40,6 +44,13 @@ public class RobotContainer {
     configureButtonBindings();
 
     sDrive.setDefaultCommand(new DriveBySwerve(sDrive, driver));
+
+    if (Constants.SUBSYSTEM_VERSION == "Test") {
+
+      sMotorTuner = new SwerveMotorTuner(sDrive.getLeftFrontSteer(), sDrive.getLeftBackSteer(),
+          sDrive.getRightFrontSteer(), sDrive.getRightBackSteer());
+    }
+
   }
 
   /**
@@ -51,6 +62,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    driver = new Joystick(Constants.DRIVER_JOYSTICK_ID);
+    operator = new Joystick(Constants.OPERATOR_JOYSTICK_ID);
+
+    if (Constants.SUBSYSTEM_VERSION == "Test") {
+
+      new JoystickButton(operator, Constants.TRIANGLE).whenPressed(command);
+
+      new JoystickButton(operator, Constants.SQUARE).whenPressed(command);
+
+      new JoystickButton(operator, buttonNumber).whenPressed(command);
+
+    }
+
   }
 
   /**

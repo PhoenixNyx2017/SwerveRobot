@@ -60,12 +60,35 @@ public class SwerveDrive extends SubsystemBase {
     // numbers are values from [-1.0, 1.0]
 
     // may need to adjust
+    double forward_adjusted = forward * Constants.MAX_LIN_SPEED;
+    double strafe_adjusted = strafe * Constants.MAX_LIN_SPEED;
+    double rotation_adjusted = rotation * Constants.MAX_ROT_SPEED;
 
-    sClass.driveSwerve(forward, strafe, rotation);
+    // sClass.driveSwerve(forward_adjusted, strafe_adjusted, rotation_adjusted);
+    sClass.driveSwerveKinematics(forward, strafe, rotation);
 
   }
 
   public void resetEncoders() {
     sClass.resetEncoders();
   }
+
+  // ------------Helper Functions--------------------------
+
+  public TalonFX getLeftFrontSteer() {
+    return leftFrontSteer;
+  }
+
+  public TalonFX getLeftBackSteer() {
+    return leftBackSteer;
+  }
+
+  public TalonFX getRightFrontSteer() {
+    return rightFrontSteer;
+  }
+
+  public TalonFX getRightBackSteer() {
+    return rightBackSteer;
+  }
+
 }

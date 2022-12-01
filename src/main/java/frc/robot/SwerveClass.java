@@ -11,6 +11,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 
 /** Add your docs here. */
@@ -22,8 +27,13 @@ public class SwerveClass {
     public TalonFX rightFrontDriver, rightFrontTurner;
     public TalonFX rightBackDriver, rightBackTurner;
 
+    public SwerveDriveKinematics sDriveKinematics;
+    public SwerveDriveOdometry sDriveOdometry;
+
+    Translation2d leftFrontWheel, leftBackWheel, rightFrontWheel, rightBackWheel;
     // TODO: Add IMU here
     // private AHRS imu;
+    public AHRS imu;
 
     public SwerveClass(TalonFX leftFrontDriver, TalonFX leftFrontTurner,
             TalonFX leftBackDriver, TalonFX leftBackTurner,
@@ -40,7 +50,16 @@ public class SwerveClass {
         this.rightBackDriver = rightFrontDriver;
         this.rightBackTurner = rightBackTurner;
 
-        // imu = new AHRS(SPI.Port.kMXP);
+        imu = new AHRS(SPI.Port.kMXP);
+
+        leftFrontWheel = new Translation2d(-Constants.WHEEL_BASE / 2, Constants.TRACK_WIDTH / 2);
+        leftBackWheel = new Translation2d(-Constants.WHEEL_BASE / 2, -Constants.TRACK_WIDTH / 2);
+        rightFrontWheel = new Translation2d(Constants.WHEEL_BASE / 2, Constants.TRACK_WIDTH / 2);
+        rightBackWheel = new Translation2d(Constants.WHEEL_BASE / 2, -Constants.TRACK_WIDTH / 2);
+
+        sDriveKinematics = new SwerveDriveKinematics(leftFrontWheel, leftBackWheel, rightFrontWheel, rightBackWheel);
+        sDriveOdometry = new SwerveDriveOdometry(sDriveKinematics, imu.getRotation2d());
+
     }
 
     public void driveSwerve(double forward, double strafe, double rotation) {
@@ -99,6 +118,38 @@ public class SwerveClass {
         double wa2 = Math.atan2(b, d) * (180.0 / Math.PI);
         double wa3 = Math.atan2(a, d) * (180.0 / Math.PI);
         double wa4 = Math.atan2(a, c) * (180.0 / Math.PI);
+    }
+
+    public void driveSwerveKinematics(double forward, double strafe, double rotation) {
+
+        double xMetersPerSecond = forward * Constants.MAX_LIN_SPEED;
+        double yMetersPerSecond = strafe * Constants.MAX_LIN_SPEED;
+        double omegaRadiansPerSecond = rotation * Constants.MAX_ROT_SPEED;
+
+        ChassisSpeeds inputs = new ChassisSpeeds(xMetersPerSecond, yMetersPerSecond, omegaRadiansPerSecond);
+
+        SwerveModuleState[] modules = sDriveKinematics.toSwerveModuleStates(inputs);
+
+        SwerveModuleState leftFrontModule = modules[0];
+        SwerveModuleState leftBackModule = modules[1];
+        SwerveModuleState rightFrontModule = modules[2];
+        SwerveModuleState rightBackModule = modules[3];
+
+        // TODO: get the encoder Ticks
+        leftFrontDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(leftFrontModule.speedMetersPerSecond));
+        leftBackDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(leftBackModule.speedMetersPerSecond));
+        rightFrontDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(rightFrontModule.speedMetersPerSecond));
+        rightBackDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(rightBackModule.speedMetersPerSecond));
+
+        leftFrontTurner.set(ControlMode.Position,
+                angle2Encoder(leftFrontModule.angle.getRadians()) + Constants.LEFT_FRONT_ANGLE_ENCODER_OFFSET);
+        leftBackTurner.set(ControlMode.Position,
+                angle2Encoder(leftBackModule.angle.getRadians()) + Constants.LEFT_BACK_ANGLE_ENCODER_OFFSET);
+        rightFrontTurner.set(ControlMode.Position,
+                angle2Encoder(rightFrontModule.angle.getRadians()) + Constants.RIGHT_FRONT_ANGLE_ENCODER_OFFSET);
+        rightBackTurner.set(ControlMode.Position,
+                angle2Encoder(rightBackModule.angle.getRadians()) + Constants.RIGHT_BACK_ANGLE_ENCODER_OFFSET);
+
     }
 
     public void resetEncoders() {
@@ -226,14 +277,17 @@ public class SwerveClass {
     }
 
     private int wheelSpeed2EncoderTics(double speed) {
+        // meters/sec to encoder tics
         int encoders = (int) ((speed
-                * (Constants.ENCODER_TICKS_PER_ROTATION / (Constants.WHEEL_DIAMETER * Math.PI)))
+                * (Constants.ENCODER_TICKS_PER_ROTATION
+                        / (Constants.WHEEL_DIAMETER * Constants.INCHES_2_METERS * Math.PI)))
                 / Constants.HUNDRED_MS_IN_SEC);
 
         return encoders;
     }
 
     private int angle2Encoder(double angle) {
+        // radians to encoder tic
         int encoders = (int) ((angle / (2 * Math.PI)) * Constants.ENCODER_TICKS_PER_ROTATION);
 
         return encoders;
