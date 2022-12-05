@@ -6,6 +6,7 @@ package frc.robot.SwerveMotorTuner;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,16 +17,24 @@ public class SwerveMotorTuner extends SubsystemBase {
   // used for tuning the encoders of the angle motors
   TalonFX leftFrontMotor, leftBackMotor, rightFrontMotor, rightBackMotor;
 
+  CANCoder leftFrontSteerCAN, leftBackSteerCAN, rightFrontSteerCAN, rightBackSteerCAN;
+
   int leftFrontEncoderTic = 0;
   int leftBackEncoderTic = 0;
   int rightFrontEncoderTic = 0;
   int rightBackEncoderTic = 0;
 
-  public SwerveMotorTuner(TalonFX leftFront, TalonFX leftBack, TalonFX rightFront, TalonFX rightBack) {
+  public SwerveMotorTuner(TalonFX leftFront, TalonFX leftBack, TalonFX rightFront, TalonFX rightBack,
+      CANCoder leftFrontCAN, CANCoder leftBackCAN, CANCoder rightFrontCAN, CANCoder rightBackCAN) {
     this.leftFrontMotor = leftFront;
     this.leftBackMotor = leftBack;
     this.rightFrontMotor = rightFront;
     this.rightBackMotor = rightBack;
+
+    this.leftFrontSteerCAN = leftFrontCAN;
+    this.leftBackSteerCAN = leftBackCAN;
+    this.rightFrontSteerCAN = rightFrontCAN;
+    this.rightBackSteerCAN = rightBackCAN;
 
   }
 
@@ -36,7 +45,7 @@ public class SwerveMotorTuner extends SubsystemBase {
 
   public void displayEncoderTic() {
     // displays the encoders on the smartDashboard
-    SmartDashboard.putNumber("leftFront Encoder", leftFrontEncoderTic);
+    SmartDashboard.putNumber("leftFront Encoder", leftFrontSteerCAN.getAbsolutePosition());
     SmartDashboard.putNumber("leftBack Encoder", leftBackEncoderTic);
     SmartDashboard.putNumber("rightFront Encoder", rightFrontEncoderTic);
     SmartDashboard.putNumber("rightBack Encoder", rightBackEncoderTic);

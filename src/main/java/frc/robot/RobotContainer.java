@@ -14,6 +14,7 @@ import frc.robot.SwerveDrive.SwerveDrive;
 import frc.robot.SwerveDrive.commands.DriveBySwerve;
 import frc.robot.SwerveMotorTuner.SwerveMotorTuner;
 import frc.robot.SwerveMotorTuner.commands.DecreaseEncoderTic;
+import frc.robot.SwerveMotorTuner.commands.DisplayCanCoderValues;
 import frc.robot.SwerveMotorTuner.commands.IncreaseEncoderTic;
 import frc.robot.SwerveMotorTuner.commands.SetEncodersToZero;
 
@@ -48,11 +49,11 @@ public class RobotContainer {
 
     sDrive.setDefaultCommand(new DriveBySwerve(sDrive, driver));
 
-    if (Constants.SUBSYSTEM_VERSION == "Test") {
+    sMotorTuner = new SwerveMotorTuner(sDrive.getLeftFrontSteer(), sDrive.getLeftBackSteer(),
+        sDrive.getRightFrontSteer(), sDrive.getRightBackSteer(),
+        sDrive.getLFCan(), sDrive.getLBCan(), sDrive.getRFCan(), sDrive.getRBCan());
 
-      sMotorTuner = new SwerveMotorTuner(sDrive.getLeftFrontSteer(), sDrive.getLeftBackSteer(),
-          sDrive.getRightFrontSteer(), sDrive.getRightBackSteer());
-    }
+    sMotorTuner.setDefaultCommand(new DisplayCanCoderValues(sMotorTuner));
 
   }
 
@@ -71,11 +72,14 @@ public class RobotContainer {
 
     if (Constants.SUBSYSTEM_VERSION == "Test") {
 
-      new JoystickButton(operator, Constants.TRIANGLE).whenPressed(new IncreaseEncoderTic());
+      // new JoystickButton(operator, Constants.TRIANGLE).whenPressed(new
+      // IncreaseEncoderTic(sMotorTuner));
 
-      new JoystickButton(operator, Constants.SQUARE).whenPressed(new DecreaseEncoderTic());
+      // new JoystickButton(operator, Constants.SQUARE).whenPressed(new
+      // DecreaseEncoderTic(sMotorTuner));
 
-      new JoystickButton(operator, Constants.X_BUTTON).whenPressed(new SetEncodersToZero());
+      // new JoystickButton(operator, Constants.X_BUTTON).whenPressed(new
+      // SetEncodersToZero(sMotorTuner));
 
     }
 

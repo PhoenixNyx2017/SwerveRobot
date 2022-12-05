@@ -6,8 +6,10 @@ package frc.robot.SwerveDrive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
@@ -22,6 +24,8 @@ public class SwerveDrive extends SubsystemBase {
   TalonFX leftBackDrive, leftBackSteer;
   TalonFX rightFrontDrive, rightFrontSteer;
   TalonFX rightBackDrive, rightBackSteer;
+
+  CANCoder leftFrontCanCoder, leftBackCanCoder, rightFrontCanCoder, rightBackCanCoder;
 
   public SwerveClass sClass;
 
@@ -38,6 +42,11 @@ public class SwerveDrive extends SubsystemBase {
     leftBackSteer = new TalonFX(Constants.LEFT_BACK_TURN_ID);
     rightFrontSteer = new TalonFX(Constants.RIGHT_FRONT_TURN_ID);
     rightBackSteer = new TalonFX(Constants.RIGHT_BACK_TURN_ID);
+
+    leftFrontCanCoder = new CANCoder(Constants.LEFT_FRONT_CANCODER_ID);
+    leftBackCanCoder = new CANCoder(Constants.LEFT_BACK_CANCODER_ID);
+    rightFrontCanCoder = new CANCoder(Constants.RIGHT_FRONT_CANCODER_ID);
+    rightBackCanCoder = new CANCoder(Constants.RIGHT_BACK_CANCODER_ID);
 
     sClass = new SwerveClass(leftFrontDrive, leftFrontSteer,
         leftBackDrive, leftBackSteer,
@@ -91,4 +100,20 @@ public class SwerveDrive extends SubsystemBase {
     return rightBackSteer;
   }
 
+  // ---------returns Cancoders
+  public CANCoder getLFCan() {
+    return leftFrontCanCoder;
+  }
+
+  public CANCoder getLBCan() {
+    return leftBackCanCoder;
+  }
+
+  public CANCoder getRFCan() {
+    return rightFrontCanCoder;
+  }
+
+  public CANCoder getRBCan() {
+    return rightBackCanCoder;
+  }
 }

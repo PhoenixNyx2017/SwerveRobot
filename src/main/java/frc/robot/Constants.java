@@ -32,10 +32,10 @@ public final class Constants {
     public final static int RIGHT_FRONT_TURN_ID = 13;
     public final static int RIGHT_BACK_TURN_ID = 14;
 
-    public final static int LEFT_FRONT_ENCODER_ID = 21;
-    public final static int LEFT_BACK_ENCODER_ID = 22;
-    public final static int RIGHT_FRONT_ENCODER_ID = 23;
-    public final static int RIGHT_BACK_ENCODER_ID = 24;
+    public final static int LEFT_FRONT_CANCODER_ID = 21;
+    public final static int LEFT_BACK_CANCODER_ID = 22;
+    public final static int RIGHT_FRONT_CANCODER_ID = 23;
+    public final static int RIGHT_BACK_CANCODER_ID = 24;
 
     // TODO
     public final static int ENCODER_TICKS_PER_ROTATION = 2048; // NEED NUMBER
@@ -67,8 +67,30 @@ public final class Constants {
     public final static int DRIVER_JOYSTICK_ID = 0;
     public final static int OPERATOR_JOYSTICK_ID = 1;
 
-    public final static int TRIANGLE = 0;
-    public final static int SQUARE = 1;
-    public final static int X_BUTTON = 2;
+    // Button IDs
+    public static final int SQUARE = 1;
+    public static final int X_BUTTON = 2;
+    public static final int CIRCLE = 3;
+    public static final int TRIANGLE = 4;
+    public static final int LEFT_BUMPER = 5;
+    public static final int RIGHT_BUMPER = 6;
+    public static final int LEFT_TRIGGER = 7;
+    public static final int RIGHT_TRIGGER = 8;
+    public static final int SHARE = 9;
+    public static final int OPTIONS = 10;
+
+    // Swerve Button IDs
+    public static final int TRIGGER = 0;
+    public static final int THUMB_BUTTON = 1;
+    public static final int THREE_BUTTON = 2;
+    public static final int FOUR_BUTTON = 3;
+    public static final int FIVE_BUTTON = 4;
+    public static final int SIX_BUTTON = 5;
+    public static final int SEVEN_BUTTON = 6;
+    public static final int EIGHT_BUTTON = 7;
+    public static final int NINE_BUTTON = 8;
+    public static final int TEN_BUTTON = 9;
+    public static final int ELEVEN_BUTTON = 10;
+    public static final int TWELVE_BUTTON = 11;
 
 }
