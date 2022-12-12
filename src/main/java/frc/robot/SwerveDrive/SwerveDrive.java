@@ -7,6 +7,7 @@ package frc.robot.SwerveDrive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.CAN;
@@ -26,6 +27,8 @@ public class SwerveDrive extends SubsystemBase {
   TalonFX rightBackDrive, rightBackSteer;
 
   CANCoder leftFrontCanCoder, leftBackCanCoder, rightFrontCanCoder, rightBackCanCoder;
+
+  CANCoderConfiguration lfCanConfig;
 
   public SwerveClass sClass;
 
@@ -51,7 +54,8 @@ public class SwerveDrive extends SubsystemBase {
     sClass = new SwerveClass(leftFrontDrive, leftFrontSteer,
         leftBackDrive, leftBackSteer,
         rightFrontDrive, rightFrontSteer,
-        rightBackDrive, rightBackSteer);
+        rightBackDrive, rightBackSteer,
+        leftFrontCanCoder, leftBackCanCoder, rightFrontCanCoder, rightBackCanCoder);
 
     imu = new AHRS(SPI.Port.kMXP); // On board Gyro
 
@@ -69,13 +73,17 @@ public class SwerveDrive extends SubsystemBase {
     // numbers are values from [-1.0, 1.0]
 
     // may need to adjust
-    double forward_adjusted = forward * Constants.MAX_LIN_SPEED;
-    double strafe_adjusted = strafe * Constants.MAX_LIN_SPEED;
-    double rotation_adjusted = rotation * Constants.MAX_ROT_SPEED;
+    // double forward_adjusted = forward * Constants.MAX_LIN_SPEED;
+    // double strafe_adjusted = strafe * Constants.MAX_LIN_SPEED;
+    // double rotation_adjusted = rotation * Constants.MAX_ROT_SPEED;
 
     // sClass.driveSwerve(forward_adjusted, strafe_adjusted, rotation_adjusted);
     sClass.driveSwerveKinematics(forward, strafe, rotation);
 
+  }
+
+  public void driveAtSetSpeed() {
+    sClass.driveDriveMotors();
   }
 
   public void resetEncoders() {

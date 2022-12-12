@@ -31,9 +31,9 @@ public class DriveBySwerve extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sDrive.drive(driver.getRawAxis(Constants.JOYSTICK_LEFT_Y_AXIS),
-        driver.getRawAxis(Constants.JOYSTICK_LEFT_X_AXIS),
-        driver.getRawAxis(Constants.JOYSTICK_RIGHT_X_AXIS));
+    sDrive.drive(-driver.getRawAxis(Constants.JOYSTICK_Y_AXIS),
+        driver.getRawAxis(Constants.JOYSTICK_X_AXIS),
+        -driver.getRawAxis(Constants.JOYSTICK_Z_ROTATION));
   }
 
   // Called once the command ends or is interrupted.

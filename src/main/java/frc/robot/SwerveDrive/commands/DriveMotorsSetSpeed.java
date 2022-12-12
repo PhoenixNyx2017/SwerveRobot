@@ -2,20 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.SwerveMotorTuner.commands;
+package frc.robot.SwerveDrive.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.SwerveMotorTuner.SwerveMotorTuner;
+import frc.robot.SwerveDrive.SwerveDrive;
 
-public class DisplayCanCoderValues extends CommandBase {
-  /** Creates a new DisplayCanCoderValues. */
-  SwerveMotorTuner sMotorTuner;
+public class DriveMotorsSetSpeed extends CommandBase {
+  /** Creates a new DriveMotorsSetSpeed. */
+  SwerveDrive sDrive;
 
-  public DisplayCanCoderValues(SwerveMotorTuner sMotorTuner) {
+  public DriveMotorsSetSpeed(SwerveDrive sDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.sMotorTuner = sMotorTuner;
+    this.sDrive = sDrive;
 
-    addRequirements(sMotorTuner);
+    addRequirements(sDrive);
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +26,7 @@ public class DisplayCanCoderValues extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    sMotorTuner.displayCanCoderTic();
+    sDrive.driveAtSetSpeed();
   }
 
   // Called once the command ends or is interrupted.

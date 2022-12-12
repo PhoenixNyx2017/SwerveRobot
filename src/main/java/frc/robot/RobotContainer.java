@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.SwerveDrive.SwerveDrive;
 import frc.robot.SwerveDrive.commands.DriveBySwerve;
+import frc.robot.SwerveDrive.commands.DriveMotorsSetSpeed;
 import frc.robot.SwerveMotorTuner.SwerveMotorTuner;
 import frc.robot.SwerveMotorTuner.commands.DecreaseEncoderTic;
 import frc.robot.SwerveMotorTuner.commands.DisplayCanCoderValues;
@@ -34,7 +35,7 @@ public class RobotContainer {
 
   SwerveMotorTuner sMotorTuner;
 
-  Joystick driver, operator;
+  Joystick driver, operator, airplane;
 
   long startTime;
 
@@ -47,7 +48,7 @@ public class RobotContainer {
     sDrive = new SwerveDrive();
     configureButtonBindings();
 
-    sDrive.setDefaultCommand(new DriveBySwerve(sDrive, driver));
+    sDrive.setDefaultCommand(new DriveBySwerve(sDrive, airplane));
 
     sMotorTuner = new SwerveMotorTuner(sDrive.getLeftFrontSteer(), sDrive.getLeftBackSteer(),
         sDrive.getRightFrontSteer(), sDrive.getRightBackSteer(),
@@ -69,19 +70,19 @@ public class RobotContainer {
 
     driver = new Joystick(Constants.DRIVER_JOYSTICK_ID);
     operator = new Joystick(Constants.OPERATOR_JOYSTICK_ID);
+    airplane = new Joystick(Constants.AIRPLANE_JOYSTICK_ID);
 
-    if (Constants.SUBSYSTEM_VERSION == "Test") {
+    // new JoystickButton(operator, Constants.TRIANGLE).whenPressed(new
+    // IncreaseEncoderTic(sMotorTuner));
 
-      // new JoystickButton(operator, Constants.TRIANGLE).whenPressed(new
-      // IncreaseEncoderTic(sMotorTuner));
+    // new JoystickButton(operator, Constants.SQUARE).whenPressed(new
+    // DecreaseEncoderTic(sMotorTuner));
 
-      // new JoystickButton(operator, Constants.SQUARE).whenPressed(new
-      // DecreaseEncoderTic(sMotorTuner));
+    // new JoystickButton(operator, Constants.X_BUTTON).whenPressed(new
+    // SetEncodersToZero(sMotorTuner));
 
-      // new JoystickButton(operator, Constants.X_BUTTON).whenPressed(new
-      // SetEncodersToZero(sMotorTuner));
-
-    }
+    new JoystickButton(airplane, Constants.THUMB_BUTTON)
+        .whenPressed(new DriveMotorsSetSpeed(sDrive));
 
   }
 

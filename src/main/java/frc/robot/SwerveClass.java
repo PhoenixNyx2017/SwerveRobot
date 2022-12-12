@@ -8,9 +8,14 @@ import java.lang.Math;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -27,6 +32,10 @@ public class SwerveClass {
     public TalonFX rightFrontDriver, rightFrontTurner;
     public TalonFX rightBackDriver, rightBackTurner;
 
+    public CANCoder leftFrontCanCoder, leftBackCanCoder, rightFrontCanCoder, rightBackCanCoder;
+
+    PIDController leftFrontPID, leftBackPID, rightFrontPID, rightBackPID;
+
     public SwerveDriveKinematics sDriveKinematics;
     public SwerveDriveOdometry sDriveOdometry;
 
@@ -38,7 +47,8 @@ public class SwerveClass {
     public SwerveClass(TalonFX leftFrontDriver, TalonFX leftFrontTurner,
             TalonFX leftBackDriver, TalonFX leftBackTurner,
             TalonFX rightFrontDriver, TalonFX rightFrontTurner,
-            TalonFX rightBackDriver, TalonFX rightBackTurner) {
+            TalonFX rightBackDriver, TalonFX rightBackTurner,
+            CANCoder lFCanCoder, CANCoder lBCanCoder, CANCoder rFCanCoder, CANCoder rBCanCoder) {
 
         this.leftFrontDriver = leftFrontDriver;
         this.leftFrontTurner = leftFrontTurner;
@@ -50,6 +60,16 @@ public class SwerveClass {
         this.rightBackDriver = rightFrontDriver;
         this.rightBackTurner = rightBackTurner;
 
+        this.leftFrontCanCoder = lFCanCoder;
+        this.leftBackCanCoder = lBCanCoder;
+        this.rightFrontCanCoder = rFCanCoder;
+        this.rightBackCanCoder = rBCanCoder;
+
+        leftFrontPID = new PIDController(1.0, 0.0001, 0.03);
+        leftBackPID = new PIDController(1.0, 0.0001, 0.03);
+        rightFrontPID = new PIDController(1.0, 0.0001, 0.03);
+        rightBackPID = new PIDController(1.0, 0.0001, 0.03);
+
         imu = new AHRS(SPI.Port.kMXP);
 
         leftFrontWheel = new Translation2d(-Constants.WHEEL_BASE / 2, Constants.TRACK_WIDTH / 2);
@@ -59,6 +79,12 @@ public class SwerveClass {
 
         sDriveKinematics = new SwerveDriveKinematics(leftFrontWheel, leftBackWheel, rightFrontWheel, rightBackWheel);
         sDriveOdometry = new SwerveDriveOdometry(sDriveKinematics, imu.getRotation2d());
+
+        // TalonFXConfiguration leftFrontConfig = new TalonFXConfiguration();
+        // leftFrontConfig.remoteFilter0.remoteSensorDeviceID =
+        // leftFrontCanCoder.getDeviceID();
+        // leftFrontConfig.remoteFilter0.remoteSensorSource =
+        // RemoteSensorSource.CANCoder;
 
     }
 
@@ -142,30 +168,47 @@ public class SwerveClass {
         rightBackDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(rightBackModule.speedMetersPerSecond));
 
         leftFrontTurner.set(ControlMode.Position,
-                angle2Encoder(leftFrontModule.angle.getRadians()) + Constants.LEFT_FRONT_ANGLE_ENCODER_OFFSET);
+                angle2Encoder(leftFrontModule.angle.getRadians()) +
+                        Constants.LEFT_FRONT_ANGLE_ENCODER_OFFSET);
         leftBackTurner.set(ControlMode.Position,
-                angle2Encoder(leftBackModule.angle.getRadians()) + Constants.LEFT_BACK_ANGLE_ENCODER_OFFSET);
+                angle2Encoder(leftBackModule.angle.getRadians()) +
+                        Constants.LEFT_BACK_ANGLE_ENCODER_OFFSET);
         rightFrontTurner.set(ControlMode.Position,
-                angle2Encoder(rightFrontModule.angle.getRadians()) + Constants.RIGHT_FRONT_ANGLE_ENCODER_OFFSET);
+                angle2Encoder(rightFrontModule.angle.getRadians()) +
+                        Constants.RIGHT_FRONT_ANGLE_ENCODER_OFFSET);
         rightBackTurner.set(ControlMode.Position,
-                angle2Encoder(rightBackModule.angle.getRadians()) + Constants.RIGHT_BACK_ANGLE_ENCODER_OFFSET);
+                angle2Encoder(rightBackModule.angle.getRadians()) +
+                        Constants.RIGHT_BACK_ANGLE_ENCODER_OFFSET);
+
+        // Cancoder setting position
+        // leftFrontCanCoder.setPosition(leftFrontModule.angle.getDegrees());
+        // leftBackCanCoder.setPosition(leftBackModule.angle.getDegrees());
+        // rightFrontCanCoder.setPosition(rightFrontModule.angle.getDegrees());
+        // rightBackCanCoder.setPosition(rightBackModule.angle.getDegrees());
 
     }
 
     public void resetEncoders() {
 
         // sets all the encoder values to zero
-        this.leftBackDriver.setSelectedSensorPosition(0, 0, 0);
-        this.leftFrontDriver.setSelectedSensorPosition(0, 0, 0);
-        this.rightFrontDriver.setSelectedSensorPosition(0, 0, 0);
-        this.rightBackDriver.setSelectedSensorPosition(0, 0, 0);
+        // this.leftBackDriver.setSelectedSensorPosition(0, 0, 0);
+        // this.leftFrontDriver.setSelectedSensorPosition(0, 0, 0);
+        // this.rightFrontDriver.setSelectedSensorPosition(0, 0, 0);
+        // this.rightBackDriver.setSelectedSensorPosition(0, 0, 0);
 
-        this.leftFrontTurner.setSelectedSensorPosition(0, 0, 0);
-        this.leftBackTurner.setSelectedSensorPosition(0, 0, 0);
-        this.rightFrontTurner.setSelectedSensorPosition(0, 0, 0);
-        this.rightBackTurner.setSelectedSensorPosition(0, 0, 0);
+        // this.leftFrontTurner.setSelectedSensorPosition(0, 0, 0);
+        // this.leftBackTurner.setSelectedSensorPosition(0, 0, 0);
+        // this.rightFrontTurner.setSelectedSensorPosition(0, 0, 0);
+        // this.rightBackTurner.setSelectedSensorPosition(0, 0, 0);
     }
 
+    public void driveDriveMotors() {
+        leftFrontDriver.set(ControlMode.PercentOutput, 0.2);
+        leftBackDriver.set(ControlMode.PercentOutput, 0.2);
+        rightFrontDriver.set(ControlMode.PercentOutput, 0.2);
+        rightBackDriver.set(ControlMode.PercentOutput, 0.2);
+
+    }
     // ---------PRIVATE METHODS FOR THE MATH------------------------------------
 
     private double[] findLeftFront(double forward, double strafe, double rotation) {
@@ -292,6 +335,12 @@ public class SwerveClass {
 
         return encoders;
 
+    }
+
+    private double Cancoder2Degrees(double cancoder) {
+        double degrees = ((cancoder / Constants.CANCODER_TICS_PER_ROTATION) * 360.00);
+
+        return degrees;
     }
 
 }
