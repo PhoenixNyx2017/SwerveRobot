@@ -8,11 +8,13 @@ import java.lang.Math;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -22,6 +24,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 // This is a custom class for Swerve Drive
@@ -38,6 +41,8 @@ public class SwerveClass {
 
     public SwerveDriveKinematics sDriveKinematics;
     public SwerveDriveOdometry sDriveOdometry;
+
+    TalonFXConfiguration leftFrontConfig, leftBackConfig, rightFrontConfig, rightBackConfig;
 
     Translation2d leftFrontWheel, leftBackWheel, rightFrontWheel, rightBackWheel;
     // TODO: Add IMU here
@@ -57,7 +62,7 @@ public class SwerveClass {
 
         this.rightFrontDriver = rightFrontDriver;
         this.rightFrontTurner = rightFrontTurner;
-        this.rightBackDriver = rightFrontDriver;
+        this.rightBackDriver = rightBackDriver;
         this.rightBackTurner = rightBackTurner;
 
         this.leftFrontCanCoder = lFCanCoder;
@@ -65,10 +70,12 @@ public class SwerveClass {
         this.rightFrontCanCoder = rFCanCoder;
         this.rightBackCanCoder = rBCanCoder;
 
-        leftFrontPID = new PIDController(1.0, 0.0001, 0.03);
-        leftBackPID = new PIDController(1.0, 0.0001, 0.03);
-        rightFrontPID = new PIDController(1.0, 0.0001, 0.03);
-        rightBackPID = new PIDController(1.0, 0.0001, 0.03);
+        configAllMotors();
+
+        // leftFrontPID = new PIDController(1.0, 0.0001, 0.03);
+        // leftBackPID = new PIDController(1.0, 0.0001, 0.03);
+        // rightFrontPID = new PIDController(1.0, 0.0001, 0.03);
+        // rightBackPID = new PIDController(1.0, 0.0001, 0.03);
 
         imu = new AHRS(SPI.Port.kMXP);
 
@@ -79,12 +86,6 @@ public class SwerveClass {
 
         sDriveKinematics = new SwerveDriveKinematics(leftFrontWheel, leftBackWheel, rightFrontWheel, rightBackWheel);
         sDriveOdometry = new SwerveDriveOdometry(sDriveKinematics, imu.getRotation2d());
-
-        // TalonFXConfiguration leftFrontConfig = new TalonFXConfiguration();
-        // leftFrontConfig.remoteFilter0.remoteSensorDeviceID =
-        // leftFrontCanCoder.getDeviceID();
-        // leftFrontConfig.remoteFilter0.remoteSensorSource =
-        // RemoteSensorSource.CANCoder;
 
     }
 
@@ -162,11 +163,15 @@ public class SwerveClass {
         SwerveModuleState rightBackModule = modules[3];
 
         // TODO: get the encoder Ticks
+
+        SmartDashboard.putNumber("Velocity", wheelSpeed2EncoderTics(leftFrontModule.speedMetersPerSecond));
         leftFrontDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(leftFrontModule.speedMetersPerSecond));
         leftBackDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(leftBackModule.speedMetersPerSecond));
         rightFrontDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(rightFrontModule.speedMetersPerSecond));
         rightBackDriver.set(ControlMode.Velocity, wheelSpeed2EncoderTics(rightBackModule.speedMetersPerSecond));
 
+        SmartDashboard.putNumber("Rotation", angle2Encoder(leftFrontModule.angle.getRadians()) +
+                Constants.LEFT_FRONT_ANGLE_ENCODER_OFFSET);
         leftFrontTurner.set(ControlMode.Position,
                 angle2Encoder(leftFrontModule.angle.getRadians()) +
                         Constants.LEFT_FRONT_ANGLE_ENCODER_OFFSET);
@@ -209,6 +214,57 @@ public class SwerveClass {
         rightBackDriver.set(ControlMode.PercentOutput, 0.2);
 
     }
+
+    public void configAllMotors() {
+        leftFrontConfig = new TalonFXConfiguration();
+        leftBackConfig = new TalonFXConfiguration();
+        rightFrontConfig = new TalonFXConfiguration();
+        rightBackConfig = new TalonFXConfiguration();
+
+        leftFrontConfig.remoteFilter0.remoteSensorDeviceID = leftFrontCanCoder.getDeviceID();
+        leftFrontConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
+        leftFrontConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        leftFrontConfig.slot0.kP = 0.1;
+        leftFrontConfig.slot0.kI = 0.0;
+        leftFrontConfig.slot0.kD = 0.0;
+        leftFrontConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
+
+        rightFrontConfig.remoteFilter0.remoteSensorDeviceID = rightFrontCanCoder.getDeviceID();
+        rightFrontConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
+        rightFrontConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        rightFrontConfig.slot0.kP = 0.1;
+        rightFrontConfig.slot0.kI = 0.0;
+        rightFrontConfig.slot0.kD = 0.0;
+        rightFrontConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
+
+        leftBackConfig.remoteFilter0.remoteSensorDeviceID = leftBackCanCoder.getDeviceID();
+        leftBackConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
+        leftBackConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        leftBackConfig.slot0.kP = 0.1;
+        leftBackConfig.slot0.kI = 0.0;
+        leftBackConfig.slot0.kD = 0.0;
+        leftBackConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
+
+        rightBackConfig.remoteFilter0.remoteSensorDeviceID = rightBackCanCoder.getDeviceID();
+        rightBackConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
+        rightBackConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        rightBackConfig.slot0.kP = 0.1;
+        rightBackConfig.slot0.kI = 0.0;
+        rightBackConfig.slot0.kD = 0.0;
+        rightBackConfig.initializationStrategy = SensorInitializationStrategy.BootToZero;
+
+        leftFrontTurner.configAllSettings(leftFrontConfig);
+        leftBackTurner.configAllSettings(leftBackConfig);
+        rightFrontTurner.configAllSettings(rightFrontConfig);
+        rightBackTurner.configAllSettings(rightBackConfig);
+
+        leftFrontDriver.configAllSettings(leftFrontConfig);
+        leftBackDriver.configAllSettings(leftBackConfig);
+        rightFrontDriver.configAllSettings(rightFrontConfig);
+        rightBackDriver.configAllSettings(rightBackConfig);
+
+    }
+
     // ---------PRIVATE METHODS FOR THE MATH------------------------------------
 
     private double[] findLeftFront(double forward, double strafe, double rotation) {

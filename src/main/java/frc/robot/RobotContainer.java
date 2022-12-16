@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.SwerveDrive.SwerveDrive;
 import frc.robot.SwerveDrive.commands.DriveBySwerve;
 import frc.robot.SwerveDrive.commands.DriveMotorsSetSpeed;
+import frc.robot.SwerveDrive.commands.DriveRightBackMotor;
 import frc.robot.SwerveMotorTuner.SwerveMotorTuner;
 import frc.robot.SwerveMotorTuner.commands.DecreaseEncoderTic;
 import frc.robot.SwerveMotorTuner.commands.DisplayCanCoderValues;
@@ -82,7 +83,10 @@ public class RobotContainer {
     // SetEncodersToZero(sMotorTuner));
 
     new JoystickButton(airplane, Constants.THUMB_BUTTON)
-        .whenPressed(new DriveMotorsSetSpeed(sDrive));
+        .whileHeld(new DriveMotorsSetSpeed(sDrive));
+
+    new JoystickButton(airplane, Constants.THREE_BUTTON)
+        .whileHeld(new DriveRightBackMotor(sDrive));
 
   }
 

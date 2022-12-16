@@ -18,7 +18,7 @@ package frc.robot;
  */
 public final class Constants {
 
-    public static double MAX_LIN_SPEED = 1.0; // meters/sec
+    public static double MAX_LIN_SPEED = 0.5; // meters/sec
     public static double MAX_ROT_SPEED = 1.0; // rad/sec
 
     // TODO: get true ID numbers
@@ -48,7 +48,7 @@ public final class Constants {
     public final static int RIGHT_BACK_CANCODER_ID_M_THREE = 44;
 
     // TODO
-    public final static int ENCODER_TICKS_PER_ROTATION = 2048; // NEED NUMBER
+    public final static int ENCODER_TICKS_PER_ROTATION = 4096; // 2048 NEED NUMBER
     public final static double WHEEL_DIAMETER = 4.0;// inches
 
     public final static boolean FIELD_BASED = false;
@@ -67,10 +67,10 @@ public final class Constants {
     // TODO: Math constants
     public final static double INCHES_2_METERS = 0.0254;
 
-    public static int LEFT_FRONT_ANGLE_ENCODER_OFFSET = 0;
-    public static int LEFT_BACK_ANGLE_ENCODER_OFFSET = 0;
+    public static int LEFT_FRONT_ANGLE_ENCODER_OFFSET = 4096 / 2;
+    public static int LEFT_BACK_ANGLE_ENCODER_OFFSET = 4096 / 2;
     public static int RIGHT_FRONT_ANGLE_ENCODER_OFFSET = 0;
-    public static int RIGHT_BACK_ANGLE_ENCODER_OFFSET = 0;
+    public static int RIGHT_BACK_ANGLE_ENCODER_OFFSET = 4096 / 4;
 
     public final static double TRACK_WIDTH = (22.0 - 2.625 - 2.625) * INCHES_2_METERS; // number in meters
     public final static double WHEEL_BASE = (22.0 - 2.625 - 2.625) * INCHES_2_METERS; // number in meters
@@ -94,18 +94,18 @@ public final class Constants {
     // public static final int OPTIONS = 10;
 
     // Swerve Button IDs
-    public static final int TRIGGER = 0;
-    public static final int THUMB_BUTTON = 1;
-    public static final int THREE_BUTTON = 2;
-    public static final int FOUR_BUTTON = 3;
-    public static final int FIVE_BUTTON = 4;
-    public static final int SIX_BUTTON = 5;
-    public static final int SEVEN_BUTTON = 6;
-    public static final int EIGHT_BUTTON = 7;
-    public static final int NINE_BUTTON = 8;
-    public static final int TEN_BUTTON = 9;
-    public static final int ELEVEN_BUTTON = 10;
-    public static final int TWELVE_BUTTON = 11;
+    public static final int TRIGGER = 1;
+    public static final int THUMB_BUTTON = 2;
+    public static final int THREE_BUTTON = 3;
+    public static final int FOUR_BUTTON = 4;
+    public static final int FIVE_BUTTON = 5;
+    public static final int SIX_BUTTON = 6;
+    public static final int SEVEN_BUTTON = 7;
+    public static final int EIGHT_BUTTON = 8;
+    public static final int NINE_BUTTON = 9;
+    public static final int TEN_BUTTON = 10;
+    public static final int ELEVEN_BUTTON = 11;
+    public static final int TWELVE_BUTTON = 12;
 
     public static final int CANCODER_TICS_PER_ROTATION = 4096;
 

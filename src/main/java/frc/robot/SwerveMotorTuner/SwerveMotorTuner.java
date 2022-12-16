@@ -5,6 +5,7 @@
 package frc.robot.SwerveMotorTuner;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
@@ -56,15 +57,23 @@ public class SwerveMotorTuner extends SubsystemBase {
 
   public void displayCanCoderTic() {
     // displays the encoders on the smartDashboard
-    SmartDashboard.putNumber("leftFront Encoder", leftFrontSteerCAN.getAbsolutePosition());
-    SmartDashboard.putNumber("leftBack Encoder", leftBackSteerCAN.getAbsolutePosition());
-    SmartDashboard.putNumber("rightFront Encoder", rightFrontSteerCAN.getAbsolutePosition());
-    SmartDashboard.putNumber("rightBack Encoder", rightBackSteerCAN.getAbsolutePosition());
+    SmartDashboard.putNumber("leftFront CANEncoder", leftFrontSteerCAN.getAbsolutePosition());
+    SmartDashboard.putNumber("leftBack CANEncoder", leftBackSteerCAN.getAbsolutePosition());
+    SmartDashboard.putNumber("rightFront CANEncoder", rightFrontSteerCAN.getAbsolutePosition());
+    SmartDashboard.putNumber("rightBack CANEncoder", rightBackSteerCAN.getAbsolutePosition());
 
-    SmartDashboard.putNumber("leftFront Encoder (Position)", leftFrontSteerCAN.getPosition());
-    SmartDashboard.putNumber("leftBack Encoder (Position)", leftBackSteerCAN.getPosition());
-    SmartDashboard.putNumber("rightFront Encoder (Position)", rightFrontSteerCAN.getPosition());
-    SmartDashboard.putNumber("rightBack Encoder (Position)", rightBackSteerCAN.getPosition());
+    SmartDashboard.putNumber("leftFront CANEncoder (Position)", leftFrontSteerCAN.getPosition());
+    SmartDashboard.putNumber("leftBack CANEncoder (Position)", leftBackSteerCAN.getPosition());
+    SmartDashboard.putNumber("rightFront CANEncoder (Position)", rightFrontSteerCAN.getPosition());
+    SmartDashboard.putNumber("rightBack CANEncoder (Position)", rightBackSteerCAN.getPosition());
+
+    SmartDashboard.putNumber("leftFront Encoder (integrated)", leftFrontMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("leftBack Encoder (integrated)", leftBackMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("rightFront Encoder (integrated)", rightFrontMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("rightBack Encoder (integrated)", rightBackMotor.getSelectedSensorPosition());
+
+    // leftFrontMotor.configSelectedFeedbackSensor();
+    // leftFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
 
   }
 

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.SwerveClass;
@@ -88,6 +89,11 @@ public class SwerveDrive extends SubsystemBase {
 
   public void resetEncoders() {
     sClass.resetEncoders();
+  }
+
+  public void runRightBack() {
+    rightBackDrive.set(ControlMode.PercentOutput, 0.2);
+    SmartDashboard.putNumber("Right Back MotorOutPutPercent", rightBackDrive.getMotorOutputPercent());
   }
 
   // ------------Helper Functions--------------------------
